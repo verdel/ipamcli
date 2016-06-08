@@ -5,7 +5,7 @@ from ipamcli.cli import pass_context
 from ipamcli.commands.tools import checkMAC, checkIP
 
 
-@click.command('remove', short_help='Remove entry from NOC.')
+@click.command('remove', short_help='remove exist entry from NOC')
 @click.option('--id', help='id of entry to be deleted')
 @click.option('--ip', help='ip address of entry to be deteled')
 @click.option('--mac', help='mac address of entry to be deleted')

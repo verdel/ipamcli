@@ -6,7 +6,7 @@ from ipamcli.cli import pass_context
 from ipamcli.commands.tools import checkMAC, checkIP
 
 
-@click.command('edit', short_help='Edit entry information in NOC.')
+@click.command('edit', short_help='edit exist entry in NOC')
 @click.option('--ip', help='ip address of entry to be updated')
 @click.option('--mac', help='mac address of entry to be updated')
 @click.option('--task-id', help='task id of entry to be updated')

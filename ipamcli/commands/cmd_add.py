@@ -7,7 +7,7 @@ from ipamcli.cli import pass_context
 from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_first_empty
 
 
-@click.command('add', short_help='Add new entry to NOC.')
+@click.command('add', short_help='add new entry to NOC')
 @click.option('--first-empty', is_flag=True, help='search first empty IP address')
 @click.option('--network', help='network address for first-empty search')
 @click.option('--vlan-id', metavar='INT', help='vlan id for first-empty search')

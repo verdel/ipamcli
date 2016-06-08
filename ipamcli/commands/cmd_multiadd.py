@@ -49,7 +49,7 @@ def add_entry(ctx, ip, **kwargs):
         ctx.log('The entry for ip %s has been successfully created. The entry ID: %s.', ip, r.json()['id'])
 
 
-@click.command('multiadd')
+@click.command('multiadd', short_help='add new entry from file to NOC')
 @click.option('-c', '--config',
               type=click.Path(exists=True),
               help='path to file with new entry or entries information')

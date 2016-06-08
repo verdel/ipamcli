@@ -6,7 +6,7 @@ from ipamcli.cli import pass_context
 from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_network_by_id, get_first_empty
 
 
-@click.command('search', short_help='Search entry information in NOC.')
+@click.command('search', short_help='search entry in NOC')
 @click.option('--ip', help='ip address of entry to search')
 @click.option('--mac', help='mac address of entry to search')
 @click.option('--contains', is_flag=True, help='search not only complete but also partial matches')
