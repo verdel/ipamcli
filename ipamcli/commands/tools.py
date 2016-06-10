@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 import re
 import requests
 import netaddr
@@ -62,8 +63,13 @@ def get_network_by_id(ctx, id):
         ctx.logerr('Oops. HTTP API error occured.')
         return
 
-    if r.status_code == 200 and r.json():
+    if r.status_code == 403:
+        ctx.logerr('Invalid username or password.')
+        sys.exit(1)
+
+    elif r.status_code == 200 and r.json():
         return r.json()[0]['prefix']
+
     else:
         return None
 
@@ -77,7 +83,11 @@ def get_first_empty(ctx, network, verbose):
         ctx.logerr('Oops. HTTP API error occured.')
         return
 
-    if r.status_code == 200 and r.json():
+    if r.status_code == 403:
+        ctx.logerr('Invalid username or password.')
+        sys.exit(1)
+
+    elif r.status_code == 200 and r.json():
         network_id = r.json()[0]['id']
         network_set = netaddr.IPSet(network)
 

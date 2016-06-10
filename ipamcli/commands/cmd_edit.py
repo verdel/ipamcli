@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 import click
 import requests
 import json
@@ -21,7 +22,7 @@ def cli(ctx, ip, mac, task_id, new_ip, new_mac, new_fqdn, new_description, new_t
     if ip:
         if not checkIP(ip):
             ctx.logerr('IP address %s is invalid.', ip)
-            return
+            sys.exit(1)
 
         try:
             r = requests.get('{}/ip/address/'.format(ctx.url),
@@ -29,12 +30,12 @@ def cli(ctx, ip, mac, task_id, new_ip, new_mac, new_fqdn, new_description, new_t
                              params={'address': ip})
         except:
             ctx.logerr('Oops. HTTP API error occured.')
-            return
+            sys.exit(1)
 
     elif mac:
         if not checkMAC(mac):
             ctx.logerr('MAC address %s is invalid.', mac)
-            return
+            sys.exit(1)
 
         else:
             try:
@@ -43,7 +44,7 @@ def cli(ctx, ip, mac, task_id, new_ip, new_mac, new_fqdn, new_description, new_t
                                  params={'mac': mac})
             except:
                 ctx.logerr('Oops. HTTP API error occured.')
-                return
+                sys.exit(1)
 
     elif task_id:
         try:
@@ -52,34 +53,34 @@ def cli(ctx, ip, mac, task_id, new_ip, new_mac, new_fqdn, new_description, new_t
                              params={'tt': task_id})
         except:
             ctx.logerr('Oops. HTTP API error occured.')
-            return
+            sys.exit(1)
 
     else:
-        ctx.logerr('You must set at least one option for search.')
-        return
+        ctx.logerr('At least one of the search option must be set.')
+        sys.exit(1)
 
     if r.status_code == 403:
         ctx.logerr('Invalid username or password.')
-        return
+        sys.exit(1)
 
     else:
         resp = r.json()
         if len(resp) == 0:
             ctx.logerr('There is no record. For edit operation must be specified at least one entry.')
-            return
+            sys.exit(1)
 
         elif len(resp) == 1:
             payload = dict()
             if new_ip:
                 if not checkIP(new_ip):
                     ctx.logerr('IP adrress %s is invalid.', new_ip)
-                    return
+                    sys.exit(1)
                 payload.update({'address': new_ip})
 
             if new_mac:
                 if not checkMAC(new_mac):
                     ctx.logerr('MAC address %s is invalid.', mac)
-                    return
+                    sys.exit(1)
                 payload.update({'mac': new_mac})
 
             if new_fqdn:
@@ -97,15 +98,15 @@ def cli(ctx, ip, mac, task_id, new_ip, new_mac, new_fqdn, new_description, new_t
                                  data=json.dumps(payload))
             except:
                 ctx.logerr('Oops. HTTP API error occured.')
-                return
+                sys.exit(1)
 
             if r.status_code == 200:
                 ctx.log('The entry has been successfully updated.')
 
             else:
                 ctx.logerr('Error updating the entry.')
-                return
+                sys.exit(1)
 
         else:
             ctx.logerr('There is multiple entries. For edit operation must be specified only one entry.')
-            return
+            sys.exit(1)

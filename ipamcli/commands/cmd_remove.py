@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 import requests
+import sys
 from ipamcli.cli import pass_context
 from ipamcli.commands.tools import checkMAC, checkIP
 
@@ -19,16 +20,20 @@ def cli(ctx, id, ip, mac):
                              params={'id': id})
         except:
             ctx.logerr('Oops. HTTP API error occured.')
-            return
+            sys.exit(1)
 
-        if r.status_code != 200 or not r.json():
-            ctx.log('There is no entry for id %s', id)
-            return
+        if r.status_code == 403:
+            ctx.logerr('Invalid username or password.')
+            sys.exit(1)
+
+        elif r.status_code != 200 or not r.json():
+            ctx.logerr('There is no entry for id %s.', id)
+            sys.exit(1)
 
     elif ip:
         if not checkIP(ip):
             ctx.logerr('IP address %s is invalid.', ip)
-            return
+            sys.exit(1)
 
         try:
             r = requests.get('{}/ip/address/'.format(ctx.url),
@@ -36,11 +41,15 @@ def cli(ctx, id, ip, mac):
                              params={'address': ip})
         except:
             ctx.logerr('Oops. HTTP API error occured.')
-            return
+            sys.exit(1)
 
-        if r.status_code != 200 or not r.json():
-            ctx.log('There is no entry for ip %s', str(ip))
-            return
+        if r.status_code == 403:
+            ctx.logerr('Invalid username or password.')
+            sys.exit(1)
+
+        elif r.status_code != 200 or not r.json():
+            ctx.logerr('There is no entry for ip %s.', str(ip))
+            sys.exit(1)
 
         else:
             id = r.json()[0]['id']
@@ -48,7 +57,7 @@ def cli(ctx, id, ip, mac):
     elif mac:
         if not checkMAC(mac):
             ctx.logerr('MAC address %s is invalid.', mac)
-            return
+            sys.exit(1)
 
         else:
             try:
@@ -57,28 +66,41 @@ def cli(ctx, id, ip, mac):
                                  params={'mac': mac})
             except:
                 ctx.logerr('Oops. HTTP API error occured.')
-                return
+                sys.exit(1)
 
-            if r.status_code != 200 and not r.json():
-                ctx.log('There is no entry for mac %s', mac)
-                return
+            if r.status_code == 403:
+                ctx.logerr('Invalid username or password.')
+                sys.exit(1)
+
+            elif r.status_code != 200 or not r.json():
+                ctx.logerr('There is no entry for mac %s.', mac)
+                sys.exit(1)
 
             elif len(r.json()) == 1:
                     id = r.json()[0]['id']
 
             else:
                 ctx.logerr('There is multiple entry for MAC %s. For a remove operation must be specified only one entry.', mac)
-                return
+                sys.exit(1)
+
+    else:
+        ctx.logerr('At least one of the remove option must be set.')
+        sys.exit(1)
 
     try:
         r = requests.delete('{}/ip/address/{}'.format(ctx.url, id),
                             auth=(ctx.username, ctx.password))
     except:
         ctx.logerr('Oops. HTTP API error occured.')
-        return
+        sys.exit(1)
 
-    if r.status_code == 204:
+    if r.status_code == 403:
+        ctx.logerr('Invalid username or password.')
+        sys.exit(1)
+
+    elif r.status_code == 204:
         ctx.log('The entry has been successfully removed.')
 
     else:
         ctx.logerr('Error deleting entry.')
+        sys.exit(1)

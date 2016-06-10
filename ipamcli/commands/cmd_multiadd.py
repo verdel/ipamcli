@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 import click
 import requests
 import json
@@ -37,10 +38,11 @@ def add_entry(ctx, ip, **kwargs):
                           data=json.dumps(payload))
     except:
         ctx.logerr('Oops. HTTP API error occured.')
-        return
+        sys.exit(1)
 
     if r.status_code == 403:
         ctx.logerr('Invalid username or password.')
+        sys.exit(1)
 
     elif r.status_code == 409:
         ctx.logerr('The entry for ip %s was not created. Duplicated entry.', ip)
@@ -81,7 +83,7 @@ def cli(ctx, config):
 
     except:
         ctx.logerr('Error openning file.')
-        return
+        sys.exit(1)
 
     for item in config:
         if item['ip']:
