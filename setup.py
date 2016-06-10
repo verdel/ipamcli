@@ -7,6 +7,15 @@ from setuptools import setup, find_packages
 
 here = path.abspath(path.dirname(__file__))
 
+# Parse the version from the mapbox module.
+with open('ipamcli/__init__.py') as f:
+    for line in f:
+        if line.find("__version__") >= 0:
+            version = line.split("=")[1].strip()
+            version = version.strip('"')
+            version = version.strip("'")
+            continue
+
 with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
@@ -22,16 +31,20 @@ requirements = [
 
 setup(
     name='ipamcli',
-    version='0.0.1',
-    description='Console client for NOC IPAM module.',
+    version=version,
+    description='Command line interface to NOC IPAM module.',
     long_description=readme + '\n\n' + history,
     author='Vadim Aleksandrov',
     author_email='valeksandrov@me.com',
     url='https://github.com/verdel/ipamcli',
-    packages=find_packages(),
-        entry_points={'console_scripts': ['ipamcli=ipamcli.cli:cli', ], },
+    test_suite='tests',
+    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    entry_points={'console_scripts': ['ipamcli=ipamcli.cli:cli', ], },
     include_package_data=True,
     install_requires=requirements,
+    extras_require={
+        'test': ['responses'],
+    },
     keywords='ipamcli',
     license="MIT",
     classifiers=[
