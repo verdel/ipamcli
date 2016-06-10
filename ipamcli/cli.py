@@ -50,10 +50,10 @@ class ComplexCLI(click.MultiCommand):
 
 @click.command(cls=ComplexCLI, context_settings=CONTEXT_SETTINGS)
 @click.option('-u', '--username', required=True,
-              default=lambda: os.environ.get('IPAMCLI_USERNAME', ''),
+              default=lambda: os.environ.get('IPAMCLI_USERNAME'),
               help='Username for NOC.')
 @click.option('-p', '--password', prompt=True, hide_input=True, required=True,
-              default=lambda: os.environ.get('IPAMCLI_PASSWORD', ''),
+              default=lambda: os.environ.get('IPAMCLI_PASSWORD'),
               help='Password for NOC.')
 @click.option('--url', default='http://noc.rk.local',
               show_default=True, help='NOC url.')
