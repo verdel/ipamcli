@@ -1,0 +1,28 @@
+[
+    {
+        "afi": "4",
+        "allocated_till": null,
+        "asn": 1,
+        "asn__label": "AS0 (Default)",
+        "description": "Server IP-subnet. IS server",
+        "fav_status": false,
+        "id": 123,
+        "ipv6_transition": null,
+        "ipv6_transition__label": "",
+        "parent": 481,
+        "parent__label": "default(4): 10.0.0.0/16",
+        "prefix": "10.32.250.0/24",
+        "project": null,
+        "project__label": "",
+        "state": 1,
+        "state__label": "ALLOCATED",
+        "style": null,
+        "style__label": "",
+        "tags": null,
+        "tt": null,
+        "vc": null,
+        "vc__label": "",
+        "vrf": 1,
+        "vrf__label": "global"
+    }
+]
