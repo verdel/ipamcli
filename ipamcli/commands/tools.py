@@ -54,7 +54,7 @@ def checkMAC(mac):
         return False
 
 
-def get_network_by_id(ctx, id):
+def get_network_prefix_by_id(ctx, id):
     try:
         r = requests.get('{}/ip/prefix/'.format(ctx.url),
                          auth=(ctx.username, ctx.password),
@@ -69,6 +69,26 @@ def get_network_by_id(ctx, id):
 
     elif r.status_code == 200 and r.json():
         return r.json()[0]['prefix']
+
+    else:
+        return None
+
+
+def get_network_description_by_id(ctx, id):
+    try:
+        r = requests.get('{}/ip/prefix/'.format(ctx.url),
+                         auth=(ctx.username, ctx.password),
+                         params={'id': id})
+    except:
+        ctx.logerr('Oops. HTTP API error occured.')
+        return
+
+    if r.status_code == 403:
+        ctx.logerr('Invalid username or password.')
+        sys.exit(1)
+
+    elif r.status_code == 200 and r.json():
+        return r.json()[0]['description']
 
     else:
         return None

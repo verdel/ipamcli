@@ -127,9 +127,10 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--ip', '10.32.250.1'])
 
-        result_require = u'ID: {}\nSubnet: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
             'fqdn.local',
@@ -164,9 +165,10 @@ class SearchCommand(unittest.TestCase):
              '--ip', '10.32.250',
              '--contains'])
 
-        result_require = u'ID: {}\nSubnet: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
             'fqdn.local',
@@ -200,9 +202,10 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--mac', '00:50:56:AE:7F:09'])
 
-        result_require = u'ID: {}\nSubnet: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
             'fqdn.local',
@@ -236,9 +239,10 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--task-id', '10'])
 
-        result_require = u'ID: {}\nSubnet: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
             'fqdn.local',

@@ -4,7 +4,7 @@ import click
 import netaddr
 import requests
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_network_by_id, get_first_empty
+from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_network_prefix_by_id, get_network_description_by_id, get_first_empty
 
 
 @click.command('search', short_help='search entry in NOC')
@@ -110,9 +110,10 @@ def cli(ctx, ip, mac, contains, task_id, first_empty, network, vlan_id, vlan_nam
             if resp:
                 resp = sorted(resp, key=lambda k: netaddr.IPAddress(k['address']))
                 for item in resp:
-                    ctx.log(u'ID: %s\nSubnet: %s\nIP: %s\nMAC: %s\nFQDN: %s\nDescription: %s\nID заявки: %s\n',
+                    ctx.log(u'ID: %s\nSubnet prefix: %s\nSubnet description: %s\nIP: %s\nMAC: %s\nFQDN: %s\nDescription: %s\nID заявки: %s\n',
                             item['id'],
-                            get_network_by_id(ctx, item['prefix']),
+                            get_network_prefix_by_id(ctx, item['prefix']),
+                            get_network_description_by_id(ctx, item['prefix']),
                             item['address'],
                             item['mac'],
                             item['fqdn'],
