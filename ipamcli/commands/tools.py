@@ -94,7 +94,7 @@ def get_network_description_by_id(ctx, id):
         return None
 
 
-def get_first_empty(ctx, network, verbose):
+def get_first_empty(ctx, network, reverse, verbose):
     try:
         r = requests.get('{}/ip/prefix/'.format(ctx.url),
                          auth=(ctx.username, ctx.password),
@@ -129,8 +129,13 @@ def get_first_empty(ctx, network, verbose):
         network_set.remove(network.broadcast)
         for item in r.json():
             network_set.remove(item['address'])
-        ip = str(network_set.__iter__().next())
+
+        if not reverse:
+            ip = network_set.__iter__().next()
+        else:
+            for ip in network_set:
+                pass
         if verbose:
             ctx.log('First empty IP address in subnet %s:\n%s',
-                    str(network), ip)
-        return ip
+                    str(network), str(ip))
+        return str(ip)

@@ -140,6 +140,122 @@ class AddCommand(unittest.TestCase):
         self.assertEqual(result.output, result_require)
 
     @responses.activate
+    def test_last_empty_vlan_id(self):
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/address/?prefix=123',
+            match_querystring=True,
+            body=self.ip_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/prefix/?prefix=10.32.250.0/24',
+            match_querystring=True,
+            body=self.network_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.POST,
+            'http://noc.rk.local/ip/address/',
+            match_querystring=True,
+            body=self.ip_create_body, status=201,
+            content_type='application/json')
+
+        result = self.runner.invoke(
+            cli,
+            ['-u', 'username',
+             '-p', 'password',
+             'add',
+             '--last-empty', '--vlan-id', '22',
+             '--mac', '00:00:00:00:00:02',
+             '--task-id', 10])
+
+        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '880')
+
+        self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.254", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
+        self.assertEqual(result.output, result_require)
+        self.assertEqual(result.exit_code, 0)
+
+    @responses.activate
+    def test_last_empty_vlan_name(self):
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/address/?prefix=123',
+            match_querystring=True,
+            body=self.ip_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/prefix/?prefix=10.32.250.0/24',
+            match_querystring=True,
+            body=self.network_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.POST,
+            'http://noc.rk.local/ip/address/',
+            match_querystring=True,
+            body=self.ip_create_body, status=201,
+            content_type='application/json')
+
+        result = self.runner.invoke(
+            cli,
+            ['-u', 'username',
+             '-p', 'password',
+             'add',
+             '--last-empty', '--vlan-name', 'smev-vipnet-vlan',
+             '--mac', '00:00:00:00:00:02',
+             '--task-id', 10])
+
+        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '880')
+
+        self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.254", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, result_require)
+
+    @responses.activate
+    def test_last_empty_network(self):
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/prefix/?prefix=10.32.250.0/24',
+            match_querystring=True,
+            body=self.network_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/address/?prefix=123',
+            match_querystring=True,
+            body=self.ip_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.POST,
+            'http://noc.rk.local/ip/address/',
+            match_querystring=True,
+            body=self.ip_create_body, status=201,
+            content_type='application/json')
+
+        result = self.runner.invoke(
+            cli,
+            ['-u', 'username',
+             '-p', 'password',
+             'add',
+             '--last-empty', '--network', '10.32.250.0/24',
+             '--mac', '00:00:00:00:00:02',
+             '--task-id', 10])
+
+        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '880')
+
+        self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.254", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, result_require)
+
+
+    @responses.activate
     def test_ip(self):
 
         responses.add(

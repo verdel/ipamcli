@@ -10,6 +10,7 @@ from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_first_empty
 
 @click.command('add', short_help='add new entry to NOC')
 @click.option('--first-empty', is_flag=True, help='search first empty IP address')
+@click.option('--last-empty', is_flag=True, help='search last empty IP address')
 @click.option('--network', help='network address for first-empty search')
 @click.option('--vlan-id', metavar='<int>', help='vlan id for first-empty search')
 @click.option('--vlan-name', help='vlan name for first-empty search')
@@ -19,9 +20,9 @@ from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_first_empty
 @click.option('--description', default="", help='description for new entry')
 @click.option('--task-id', required=True, help='task id for new entry')
 @pass_context
-def cli(ctx, first_empty, network, vlan_id, vlan_name, ip, mac, fqdn, description, task_id):
+def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, fqdn, description, task_id):
     """Add new entry to NOC."""
-    if first_empty:
+    if first_empty or last_empty:
         if not network and not vlan_id and not vlan_name:
             ctx.logerr('At least one of the --network / --vlan-id / --vlan-name option must be set when use --first-empty option.')
             sys.exit(1)
@@ -50,7 +51,12 @@ def cli(ctx, first_empty, network, vlan_id, vlan_name, ip, mac, fqdn, descriptio
             ctx.logerr('Network address %s is invalid.', network)
             sys.exit(1)
 
-        ip = get_first_empty(ctx, network, verbose=False)
+        if first_empty:
+            reverse = False
+        elif last_empty:
+            reverse = True
+
+        ip = get_first_empty(ctx, network, reverse, verbose=False)
 
         if not ip:
             ctx.logerr('There is no free IP in network %s.', network)
