@@ -3,7 +3,6 @@ import sys
 import re
 import requests
 import netaddr
-import textwrap
 from collections import OrderedDict
 
 VLANS = {'22': {'name': 'smev-vipnet-vlan', 'prefix': '10.32.250.0/24'},
