@@ -21,6 +21,7 @@ class Context(object):
             msg %= args
         click.echo(msg, err=True)
 
+
 pass_context = click.make_pass_decorator(Context, ensure=True)
 cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                           'commands'))
