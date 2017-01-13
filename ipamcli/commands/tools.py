@@ -3,6 +3,8 @@ import sys
 import re
 import requests
 import netaddr
+import textwrap
+from collections import OrderedDict
 
 VLANS = {'22': {'name': 'smev-vipnet-vlan', 'prefix': '10.32.250.0/24'},
          '23': {'name': 'uek-vlan', 'prefix': '10.38.33.72/29'},
@@ -31,6 +33,13 @@ VLANS = {'22': {'name': 'smev-vipnet-vlan', 'prefix': '10.32.250.0/24'},
          '226': {'name': 'jkh-vlan', 'prefix': '10.33.7.32/27'},
          '897': {'name': 'jdoc-db-vlan', 'prefix': '10.38.200.0/24'}
          }
+
+
+def in_dictlist((key, value), my_dictlist):
+    for this in my_dictlist:
+        if this[key] == value:
+            return this
+    return {}
 
 
 def checkIP(ip):
@@ -92,6 +101,63 @@ def get_network_description_by_id(ctx, id):
 
     else:
         return None
+
+
+def show_network_addresses(ctx, network, free_only, verbose):
+    try:
+        r = requests.get('{}/ip/prefix/'.format(ctx.url),
+                         auth=(ctx.username, ctx.password),
+                         params={'prefix': str(network)})
+    except:
+        ctx.logerr('Oops. HTTP API error occured.')
+        sys.exit(1)
+
+    if r.status_code == 403:
+        ctx.logerr('Invalid username or password.')
+        sys.exit(1)
+
+    elif r.status_code == 200 and r.json():
+        network_id = r.json()[0]['id']
+        network_set = netaddr.IPSet(network)
+
+    else:
+        if verbose:
+            ctx.logerr('Subnet %s not found.', str(network))
+        return False
+
+    try:
+        r = requests.get('{}/ip/address/'.format(ctx.url),
+                         auth=(ctx.username, ctx.password),
+                         params={'prefix': network_id})
+    except:
+        ctx.logerr('Oops. HTTP API error occured.')
+        return
+
+    result = []
+
+    if r.status_code == 200 and r.json():
+        network_set.remove(network.network)
+        network_set.remove(network.broadcast)
+        for item in network_set:
+            noc_ip_info = in_dictlist(('address', str(item)), r.json())
+            if noc_ip_info:
+                if not free_only:
+                    result.append(OrderedDict([
+                                              ('Address', noc_ip_info['address']),
+                                              ('MAC', noc_ip_info['mac']),
+                                              ('FQDN', noc_ip_info['fqdn']),
+                                              ('Description', noc_ip_info['description'].replace('\r\n', ' ')[:95]),
+                                              ('Task', noc_ip_info['tt'])
+                                              ]))
+            else:
+                result.append(OrderedDict([
+                                          ('Address', str(item)),
+                                          ('MAC', ''),
+                                          ('FQDN', ''),
+                                          ('Description', 'free'),
+                                          ('Task', '')
+                                          ]))
+    return result
 
 
 def get_first_empty(ctx, network, reverse, verbose):
