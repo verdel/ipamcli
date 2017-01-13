@@ -26,7 +26,8 @@ requirements = [
     'requests>=2.0',
     'netaddr',
     'click',
-    'PyYAML'
+    'PyYAML',
+    'tabulate'
 ]
 
 setup(
