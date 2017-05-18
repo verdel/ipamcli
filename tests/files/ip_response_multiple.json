@@ -37,7 +37,7 @@
         "id": 880,
         "ipv6_transition": null,
         "ipv6_transition__label": "",
-        "mac": "00:00:00:00:00:01",
+        "mac": "00:00:00:00:00:02",
         "managed_object": null,
         "managed_object__label": "",
         "prefix": 123,

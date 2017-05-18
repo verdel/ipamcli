@@ -7,7 +7,7 @@ from click.testing import CliRunner
 from ipamcli.cli import cli
 
 
-class AddCommand(unittest.TestCase):
+class MultiaddCommand(unittest.TestCase):
 
     def setUp(self):
         with open('tests/files/ip_response.json') as fh:
@@ -26,7 +26,6 @@ class AddCommand(unittest.TestCase):
 
     @responses.activate
     def test_add(self):
-
         responses.add(
             responses.POST,
             'http://noc.rk.local/ip/address/',
@@ -41,11 +40,11 @@ class AddCommand(unittest.TestCase):
              'multiadd',
              '-c', 'tests/files/test_add.yaml'])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\nThe entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '880', '10.32.250.2', '880')
-
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\nThe entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '255.255.255.0', '880', '10.32.250.2', '255.255.255.0', '880')
         self.assertEqual(json.loads(responses.calls[0].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
-        self.assertEqual(json.loads(responses.calls[1].request.body), {"address": "10.32.250.3", "mac": "00:00:00:00:00:03", "fqdn": "fqdn.local", "description": "", "tt": 10})
+        self.assertEqual(json.loads(responses.calls[1].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, result_require)
 
     @responses.activate
     def test_ip_dublicate(self):
@@ -64,10 +63,9 @@ class AddCommand(unittest.TestCase):
              'multiadd',
              '-c', 'tests/files/test_add.yaml'])
 
-        result_require = u'The entry for ip {} was not created. Duplicated entry.\nThe entry for ip {} was not created. Duplicated entry.\n'.format('10.32.250.2', '10.32.250.3')
-
+        result_require = u'The entry for ip {} was not created. Duplicated entry.\nThe entry for ip {} was not created. Duplicated entry.\n'.format('10.32.250.2', '10.32.250.2')
         self.assertEqual(json.loads(responses.calls[0].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
-        self.assertEqual(json.loads(responses.calls[1].request.body), {"address": "10.32.250.3", "mac": "00:00:00:00:00:03", "fqdn": "fqdn.local", "description": "", "tt": 10})
+        self.assertEqual(json.loads(responses.calls[1].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.output, result_require)
 
     def test_with_invalid_ip_and_mac(self):
@@ -138,6 +136,7 @@ class AddCommand(unittest.TestCase):
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(result.output, result_require)
+
 
 if __name__ == '__main__':
     unittest.main()

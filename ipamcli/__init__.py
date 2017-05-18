@@ -1,3 +1,3 @@
 # Command line interface to NOC IPAM module
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'

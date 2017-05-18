@@ -56,7 +56,7 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.output, result_require)
@@ -94,7 +94,7 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.exit_code, 0)
@@ -133,7 +133,7 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.exit_code, 0)
@@ -171,7 +171,7 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.254", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.output, result_require)
@@ -209,7 +209,7 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.254", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.exit_code, 0)
@@ -248,12 +248,11 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.254', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.254", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
-
 
     @responses.activate
     def test_ip(self):
@@ -274,7 +273,7 @@ class AddCommand(unittest.TestCase):
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
-        result_require = u'The entry for ip {} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '880')
+        result_require = u'The entry for ip {}/{} has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '255.255.255.0', '880')
 
         self.assertEqual(json.loads(responses.calls[0].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.exit_code, 0)

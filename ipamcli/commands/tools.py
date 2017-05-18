@@ -82,6 +82,14 @@ def get_network_prefix_by_id(ctx, id):
         return None
 
 
+def get_network_mask_by_subnet(subnet):
+    try:
+        netmask = str(netaddr.IPNetwork(subnet).netmask)
+    except:
+        return None
+    return netmask
+
+
 def get_network_description_by_id(ctx, id):
     try:
         r = requests.get('{}/ip/prefix/'.format(ctx.url),
@@ -201,6 +209,6 @@ def get_first_empty(ctx, network, reverse, verbose):
             for ip in network_set:
                 pass
         if verbose:
-            ctx.log('First empty IP address in subnet %s:\n%s',
-                    str(network), str(ip))
+            ctx.log('First empty IP address in subnet %s(%s):\n%s',
+                    str(network), get_network_mask_by_subnet(str(network)), str(ip))
         return str(ip)

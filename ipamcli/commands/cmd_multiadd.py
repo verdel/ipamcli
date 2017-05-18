@@ -5,7 +5,7 @@ import requests
 import json
 import yaml
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import checkMAC, checkIP
+from ipamcli.commands.tools import checkMAC, checkIP, get_network_mask_by_subnet
 
 
 def add_entry(ctx, ip, **kwargs):
@@ -48,7 +48,7 @@ def add_entry(ctx, ip, **kwargs):
         ctx.logerr('The entry for ip %s was not created. Duplicated entry.', ip)
 
     elif r.status_code == 201:
-        ctx.log('The entry for ip %s has been successfully created. The entry ID: %s.', ip, r.json()['id'])
+        ctx.log('The entry for ip %s/%s has been successfully created. The entry ID: %s.', ip, get_network_mask_by_subnet((r.json()['prefix__label']).replace("default(4): ", "")), r.json()['id'])
 
 
 @click.command('multiadd', short_help='add new entry from file to NOC')

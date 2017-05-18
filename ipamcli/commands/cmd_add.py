@@ -5,7 +5,7 @@ import requests
 import json
 import sys
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_first_empty
+from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_first_empty, get_network_mask_by_subnet
 
 
 @click.command('add', short_help='add new entry to NOC')
@@ -95,4 +95,4 @@ def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, fqdn
         sys.exit(1)
 
     elif r.status_code == 201:
-        ctx.log('The entry for ip %s has been successfully created. The entry ID: %s.', ip, r.json()['id'])
+        ctx.log('The entry for ip %s/%s has been successfully created. The entry ID: %s.', ip, get_network_mask_by_subnet((r.json()['prefix__label']).replace("default(4): ", "")), r.json()['id'])

@@ -40,7 +40,7 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--first-empty', '--vlan-id', '22'])
 
-        result_require = u'First empty IP address in subnet {}:\n{}\n'.format('10.32.250.0/24', '10.32.250.2')
+        result_require = u'First empty IP address in subnet {}({}):\n{}\n'.format('10.32.250.0/24', '255.255.255.0', '10.32.250.2')
 
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
@@ -69,7 +69,7 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--first-empty', '--vlan-name', 'smev-vipnet-vlan'])
 
-        result_require = u'First empty IP address in subnet {}:\n{}\n'.format('10.32.250.0/24', '10.32.250.2')
+        result_require = u'First empty IP address in subnet {}({}):\n{}\n'.format('10.32.250.0/24', '255.255.255.0', '10.32.250.2')
 
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
@@ -98,7 +98,7 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--first-empty', '--network', '10.32.250.0/24'])
 
-        result_require = u'First empty IP address in subnet {}:\n{}\n'.format('10.32.250.0/24', '10.32.250.2')
+        result_require = u'First empty IP address in subnet {}({}):\n{}\n'.format('10.32.250.0/24', '255.255.255.0', '10.32.250.2')
 
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
@@ -126,7 +126,7 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--last-empty', '--vlan-id', '22'])
 
-        result_require = u'First empty IP address in subnet {}:\n{}\n'.format('10.32.250.0/24', '10.32.250.254')
+        result_require = u'First empty IP address in subnet {}({}):\n{}\n'.format('10.32.250.0/24', '255.255.255.0', '10.32.250.254')
 
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
@@ -155,7 +155,7 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--last-empty', '--vlan-name', 'smev-vipnet-vlan'])
 
-        result_require = u'First empty IP address in subnet {}:\n{}\n'.format('10.32.250.0/24', '10.32.250.254')
+        result_require = u'First empty IP address in subnet {}({}):\n{}\n'.format('10.32.250.0/24', '255.255.255.0', '10.32.250.254')
 
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
@@ -184,7 +184,7 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--last-empty', '--network', '10.32.250.0/24'])
 
-        result_require = u'First empty IP address in subnet {}:\n{}\n'.format('10.32.250.0/24', '10.32.250.254')
+        result_require = u'First empty IP address in subnet {}({}):\n{}\n'.format('10.32.250.0/24', '255.255.255.0', '10.32.250.254')
 
         self.assertEqual(result.exit_code, 0)
         self.assertEqual(result.output, result_require)
@@ -213,9 +213,10 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--ip', '10.32.250.1'])
 
-        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet netmask: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            '255.255.255.0',
             'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
@@ -251,9 +252,10 @@ class SearchCommand(unittest.TestCase):
              '--ip', '10.32.250',
              '--contains'])
 
-        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet netmask: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            '255.255.255.0',
             'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
@@ -288,9 +290,10 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--mac', '00:50:56:AE:7F:09'])
 
-        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet netmask: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            '255.255.255.0',
             'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
@@ -325,9 +328,10 @@ class SearchCommand(unittest.TestCase):
              'search',
              '--task-id', '10'])
 
-        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet netmask: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
             879,
             '10.32.250.0/24',
+            '255.255.255.0',
             'Server IP-subnet. IS server',
             '10.32.250.1',
             '00:00:00:00:00:01',
