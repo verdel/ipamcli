@@ -90,6 +90,14 @@ def get_network_mask_by_subnet(subnet):
     return netmask
 
 
+def get_network_prefix_by_subnet(subnet):
+    try:
+        prefix = str(netaddr.IPNetwork(subnet).prefixlen)
+    except:
+        return None
+    return prefix
+
+
 def get_network_description_by_id(ctx, id):
     try:
         r = requests.get('{}/ip/prefix/'.format(ctx.url),
