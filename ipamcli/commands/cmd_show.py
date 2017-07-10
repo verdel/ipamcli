@@ -3,7 +3,7 @@ import sys
 import click
 import netaddr
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import VLANS, show_network_addresses
+from ipamcli.commands.tools import show_network_addresses
 from tabulate import tabulate
 
 
@@ -20,17 +20,17 @@ def cli(ctx, network, vlan_id, vlan_name, free_only):
         sys.exit(1)
 
     if vlan_id:
-        if vlan_id not in VLANS:
+        if vlan_id not in ctx.vlan_list:
             ctx.logerr('No such vlan id in list.')
             sys.exit(1)
 
         else:
-            network = VLANS[vlan_id]['prefix']
+            network = ctx.vlan_list[vlan_id]['prefix']
 
     elif vlan_name:
-        for item in VLANS:
-            if VLANS[item]['name'] == vlan_name:
-                network = VLANS[item]['prefix']
+        for item in ctx.vlan_list:
+            if ctx.vlan_list[item]['name'] == vlan_name:
+                network = ctx.vlan_list[item]['prefix']
 
         if not network:
             ctx.logerr('No such vlan name in list.')

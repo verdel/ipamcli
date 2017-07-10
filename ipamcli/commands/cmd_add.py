@@ -5,7 +5,7 @@ import requests
 import json
 import sys
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_first_empty, get_network_prefix_by_subnet, get_network_mask_by_subnet
+from ipamcli.commands.tools import checkMAC, checkIP, get_first_empty, get_network_prefix_by_subnet, get_network_mask_by_subnet
 
 
 @click.command('add', short_help='add new entry to NOC')
@@ -28,17 +28,17 @@ def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, fqdn
             sys.exit(1)
 
         if vlan_id:
-            if vlan_id not in VLANS:
+            if vlan_id not in ctx.vlan_list:
                 ctx.logerr('No such vlan id in list.')
                 sys.exit(1)
 
             else:
-                network = VLANS[vlan_id]['prefix']
+                network = ctx.vlan_list[vlan_id]['prefix']
 
         elif vlan_name:
-            for item in VLANS:
-                if VLANS[item]['name'] == vlan_name:
-                    network = VLANS[item]['prefix']
+            for item in ctx.vlan_list:
+                if ctx.vlan_list[item]['name'] == vlan_name:
+                    network = ctx.vlan_list[item]['prefix']
 
             if not network:
                 ctx.logerr('No such vlan name in list.')

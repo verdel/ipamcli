@@ -37,6 +37,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--first-empty', '--vlan-id', '22'])
 
@@ -66,6 +67,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--first-empty', '--vlan-name', 'smev-vipnet-vlan'])
 
@@ -95,6 +97,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--first-empty', '--network', '10.32.250.0/24'])
 
@@ -123,6 +126,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--last-empty', '--vlan-id', '22'])
 
@@ -152,6 +156,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--last-empty', '--vlan-name', 'smev-vipnet-vlan'])
 
@@ -181,6 +186,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--last-empty', '--network', '10.32.250.0/24'])
 
@@ -210,6 +216,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--ip', '10.32.250.1'])
 
@@ -248,6 +255,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--ip', '10.32.250',
              '--contains'])
@@ -287,6 +295,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--mac', '00:50:56:AE:7F:09'])
 
@@ -325,6 +334,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--task-id', '10'])
 
@@ -356,6 +366,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--ip', '10.32.250.1'])
 
@@ -378,6 +389,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--mac', '10:10:10:10:10:10'])
 
@@ -400,6 +412,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--task-id', 10])
 
@@ -414,6 +427,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search', '--first-empty'])
 
         result_require = 'At least one of the --network / --vlan-id / --vlan-name option must be set when use --first-empty option.\n'
@@ -427,6 +441,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search', '--first-empty', '--vlan-id', 1000])
 
         result_require = 'No such vlan id in list.\n'
@@ -440,6 +455,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search', '--first-empty', '--vlan-name', 'test'])
 
         result_require = 'No such vlan name in list.\n'
@@ -453,6 +469,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search', '--first-empty', '--network', '999.999.999.999/25'])
 
         result_require = 'Network address {} is invalid.\n'.format('999.999.999.999/25')
@@ -466,6 +483,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search', '--ip', '999.999.999.999'])
 
         result_require = 'IP address {} is invalid.\n'.format('999.999.999.999')
@@ -479,6 +497,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search', '--mac', '999:999:999:999'])
 
         result_require = 'MAC address {} is invalid.\n'.format('999:999:999:999')
@@ -492,6 +511,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search'])
 
         result_require = 'At least one of the search option must be set.\n'
@@ -513,6 +533,7 @@ class SearchCommand(unittest.TestCase):
             cli,
             ['-u', 'username1',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--task-id', 10])
 
@@ -535,6 +556,7 @@ class SearchCommand(unittest.TestCase):
             ['-u', 'username',
              '-p', 'password',
              '--url', 'http://noc1.rk.local',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'search',
              '--task-id', 10])
 

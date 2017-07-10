@@ -27,6 +27,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit'])
 
         result_require = 'At least one of the search option must be set.\n'
@@ -48,6 +49,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username1',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--task-id', 10])
 
@@ -70,6 +72,7 @@ class EditCommand(unittest.TestCase):
             ['-u', 'username',
              '-p', 'password',
              '--url', 'http://noc1.rk.local',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--task-id', 10])
 
@@ -84,6 +87,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit', '--ip', '999.999.999.999'])
 
         result_require = 'IP address {} is invalid.\n'.format('999.999.999.999')
@@ -97,6 +101,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit', '--mac', '999:999:999:999'])
 
         result_require = 'MAC address {} is invalid.\n'.format('999:999:999:999')
@@ -118,6 +123,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--ip', '10.32.250.2',
              '--new-ip', '10.32.250.3'])
@@ -141,6 +147,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--mac', '00:00:00:00:00:01',
              '--new-ip', '10.32.250.3'])
@@ -171,6 +178,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--ip', '10.32.250.1',
              '--new-ip', '10.32.250.2',
@@ -206,6 +214,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--mac', '00:00:00:00:00:01',
              '--new-ip', '10.32.250.2',
@@ -241,6 +250,7 @@ class EditCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'edit',
              '--task-id', 10,
              '--new-ip', '10.32.250.2',
@@ -254,6 +264,7 @@ class EditCommand(unittest.TestCase):
         self.assertEqual(json.loads(responses.calls[1].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "test.local", "description": "test", "tt": 20})
         self.assertEqual(result.output, result_require)
         self.assertEqual(result.exit_code, 0)
+
 
 if __name__ == '__main__':
     unittest.main()

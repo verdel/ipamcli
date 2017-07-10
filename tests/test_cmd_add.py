@@ -51,13 +51,13 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--first-empty', '--vlan-id', '22',
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
 
         result_require = u'The entry for ip {}/{} ({}) has been successfully created. The entry ID: {}.\n'.format('10.32.250.2', '24', '255.255.255.0', '880')
-
         self.assertEqual(json.loads(responses.calls[2].request.body), {"address": "10.32.250.2", "mac": "00:00:00:00:00:02", "fqdn": "fqdn.local", "description": "", "tt": 10})
         self.assertEqual(result.output, result_require)
         self.assertEqual(result.exit_code, 0)
@@ -89,6 +89,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--first-empty', '--vlan-name', 'smev-vipnet-vlan',
              '--mac', '00:00:00:00:00:02',
@@ -128,6 +129,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--first-empty', '--network', '10.32.250.0/24',
              '--mac', '00:00:00:00:00:02',
@@ -166,6 +168,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--last-empty', '--vlan-id', '22',
              '--mac', '00:00:00:00:00:02',
@@ -204,6 +207,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--last-empty', '--vlan-name', 'smev-vipnet-vlan',
              '--mac', '00:00:00:00:00:02',
@@ -243,6 +247,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--last-empty', '--network', '10.32.250.0/24',
              '--mac', '00:00:00:00:00:02',
@@ -268,6 +273,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--ip', '10.32.250.2',
              '--mac', '00:00:00:00:00:02',
@@ -310,6 +316,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--first-empty',
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
@@ -325,6 +332,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--first-empty', '--vlan-id', 1000,
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
@@ -340,6 +348,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--first-empty', '--vlan-name', 'test',
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
@@ -355,6 +364,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--first-empty', '--network', '999.999.999.999/25',
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
@@ -370,6 +380,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--ip', '999.999.999.999',
              '--mac', '00:00:00:00:00:02',
              '--task-id', 10])
@@ -385,6 +396,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--ip', '10.32.250.2',
              '--mac', '999:999:999:999',
              '--task-id', 10])
@@ -400,6 +412,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add', '--task-id', 10])
 
         result_require = 'At least one of the add option must be set.\n'
@@ -421,6 +434,7 @@ class AddCommand(unittest.TestCase):
             cli,
             ['-u', 'username1',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--ip', '10.32.250.2',
              '--mac', '00:00:00:00:00:02',
@@ -445,6 +459,7 @@ class AddCommand(unittest.TestCase):
             ['-u', 'username1',
              '-p', 'password',
              '--url', 'http://noc1.rk.local',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'add',
              '--ip', '10.32.250.2',
              '--mac', '00:00:00:00:00:02',

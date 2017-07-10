@@ -60,6 +60,7 @@ class MultiaddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'multiadd',
              '-c', 'tests/files/test_add.yaml'])
 
@@ -74,6 +75,7 @@ class MultiaddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'multiadd',
              '-c', 'tests/files/test_add_invalid.yaml'])
 
@@ -94,6 +96,7 @@ class MultiaddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'multiadd',
              '-c', 'tests/files/test_add.yaml'])
 
@@ -115,6 +118,7 @@ class MultiaddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'multiadd',
              '-c', 'tests/files/test_add.yaml'])
 
@@ -129,6 +133,7 @@ class MultiaddCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'multiadd',
              '-c', 'tests/files/test_add_invalid_format.yaml'])
 

@@ -43,6 +43,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--network', '10.32.250.0/24'])
 
@@ -71,6 +72,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--vlan-id', '22'])
 
@@ -99,6 +101,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--vlan-name', 'smev-vipnet-vlan'])
 
@@ -127,6 +130,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--free-only',
              '--network', '10.32.250.0/24'])
@@ -156,6 +160,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--free-only',
              '--vlan-id', '22'])
@@ -185,6 +190,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--free-only',
              '--vlan-name', 'smev-vipnet-vlan'])
@@ -200,6 +206,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show', '--vlan-id', 1000])
 
         result_require = 'No such vlan id in list.\n'
@@ -213,6 +220,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show', '--vlan-name', 'test'])
 
         result_require = 'No such vlan name in list.\n'
@@ -226,6 +234,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show', '--network', '999.999.999.999/25'])
 
         result_require = 'Network address {} is invalid.\n'.format('999.999.999.999/25')
@@ -239,6 +248,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show'])
 
         result_require = 'At least one of the --network / --vlan-id / --vlan-name option must be set.\n'
@@ -260,6 +270,7 @@ class ShowCommand(unittest.TestCase):
             cli,
             ['-u', 'username1',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--network', '10.32.250.0/24'])
 
@@ -282,6 +293,7 @@ class ShowCommand(unittest.TestCase):
             ['-u', 'username',
              '-p', 'password',
              '--url', 'http://noc1.rk.local',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'show',
              '--network', '10.32.250.0/24'])
 

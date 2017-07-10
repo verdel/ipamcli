@@ -4,7 +4,7 @@ import click
 import netaddr
 import requests
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import VLANS, checkMAC, checkIP, get_network_prefix_by_id, get_network_mask_by_subnet, get_network_description_by_id, get_first_empty
+from ipamcli.commands.tools import checkMAC, checkIP, get_network_prefix_by_id, get_network_mask_by_subnet, get_network_description_by_id, get_first_empty
 
 
 @click.command('search', short_help='search entry in NOC')
@@ -26,17 +26,17 @@ def cli(ctx, ip, mac, contains, task_id, first_empty, last_empty, network, vlan_
             sys.exit(1)
 
         if vlan_id:
-            if vlan_id not in VLANS:
+            if vlan_id not in ctx.vlan_list:
                 ctx.logerr('No such vlan id in list.')
                 sys.exit(1)
 
             else:
-                network = VLANS[vlan_id]['prefix']
+                network = ctx.vlan_list[vlan_id]['prefix']
 
         elif vlan_name:
-            for item in VLANS:
-                if VLANS[item]['name'] == vlan_name:
-                    network = VLANS[item]['prefix']
+            for item in ctx.vlan_list:
+                if ctx.vlan_list[item]['name'] == vlan_name:
+                    network = ctx.vlan_list[item]['prefix']
 
             if not network:
                 ctx.logerr('No such vlan name in list.')

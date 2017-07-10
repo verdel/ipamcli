@@ -40,6 +40,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--id', '879'])
 
@@ -61,6 +62,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--id', '878'])
 
@@ -89,6 +91,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--ip', '10.32.250.1'])
 
@@ -110,6 +113,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--ip', '10.32.250.2'])
 
@@ -138,6 +142,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--mac', '00:50:56:AE:7F:09'])
 
@@ -159,6 +164,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--mac', '00:50:56:AE:7F:09'])
 
@@ -180,6 +186,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--mac', '00:50:56:AE:7F:01'])
 
@@ -201,6 +208,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              '--url', 'http://noc1.rk.local',
              'remove',
              '--ip', '10.32.250.1'])
@@ -216,6 +224,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove'])
 
         result_require = 'At least one of the remove option must be set.\n'
@@ -237,6 +246,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username1',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--ip', '10.32.250.1'])
 
@@ -265,6 +275,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove',
              '--ip', '10.32.250.1'])
 
@@ -279,6 +290,7 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove', '--ip', '999.999.999.999'])
 
         result_require = 'IP address {} is invalid.\n'.format('999.999.999.999')
@@ -292,12 +304,14 @@ class RemoveCommand(unittest.TestCase):
             cli,
             ['-u', 'username',
              '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
              'remove', '--mac', '999:999:999:999'])
 
         result_require = 'MAC address {} is invalid.\n'.format('999:999:999:999')
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(result.output, result_require)
+
 
 if __name__ == '__main__':
     unittest.main()
