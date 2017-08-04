@@ -12,6 +12,9 @@ class SearchCommand(unittest.TestCase):
         with open('tests/files/ip_response.json') as fh:
             self.ip_body = fh.read()
 
+        with open('tests/files/ip_description_response.json') as fh:
+            self.ip_description_body = fh.read()
+
         with open('tests/files/network_response.json') as fh:
             self.network_body = fh.read()
 
@@ -272,6 +275,68 @@ class SearchCommand(unittest.TestCase):
             10)
 
         self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, result_require)
+
+    @responses.activate
+    def test_description(self):
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/address/?description__contains=VM',
+            match_querystring=True,
+            body=self.ip_description_body, status=200,
+            content_type='application/json')
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/prefix/?id=123',
+            match_querystring=True,
+            body=self.network_body, status=200,
+            content_type='application/json')
+
+        result = self.runner.invoke(
+            cli,
+            ['-u', 'username',
+             '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
+             'search',
+             '--description', 'VM'])
+
+        result_require = u'ID: {}\nSubnet prefix: {}\nSubnet netmask: {}\nSubnet description: {}\nIP: {}\nMAC: {}\nFQDN: {}\nDescription: {}\nID заявки: {}\n\n'.format(
+            879,
+            '10.32.250.0/24',
+            '255.255.255.0',
+            'Server IP-subnet. IS server',
+            '10.32.250.1',
+            '00:00:00:00:00:01',
+            'fqdn.local',
+            'VM',
+            10)
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual(result.output, result_require)
+
+    @responses.activate
+    def test_description_empty_result(self):
+
+        responses.add(
+            responses.GET,
+            'http://noc.rk.local/ip/address/?description__contains=VM',
+            match_querystring=True,
+            body="[]", status=200,
+            content_type='application/json')
+
+        result = self.runner.invoke(
+            cli,
+            ['-u', 'username',
+             '-p', 'password',
+             '--vlan-list-path', 'tests/files/vlan.yml',
+             'search',
+             '--description', 'VM'])
+
+        result_require = 'There is no record for description {}.\n'.format('VM')
+
+        self.assertEqual(result.exit_code, 1)
         self.assertEqual(result.output, result_require)
 
     @responses.activate

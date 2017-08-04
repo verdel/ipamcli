@@ -12,13 +12,14 @@ from ipamcli.commands.tools import checkMAC, checkIP, get_network_prefix_by_id, 
 @click.option('--mac', help='mac address of entry to search')
 @click.option('--contains', is_flag=True, help='search not only complete but also partial matches')
 @click.option('--task-id', metavar='<int>', help='task id of entry to search')
+@click.option('--description', help='description of entry to search')
 @click.option('--first-empty', is_flag=True, help='search first empty IP address')
 @click.option('--last-empty', is_flag=True, help='search last empty IP address')
 @click.option('--network', help='network address for first-empty search')
 @click.option('--vlan-id', metavar='<int>', help='vlan id for first-empty search')
 @click.option('--vlan-name', help='vlan name for first-empty search')
 @pass_context
-def cli(ctx, ip, mac, contains, task_id, first_empty, last_empty, network, vlan_id, vlan_name):
+def cli(ctx, ip, mac, contains, task_id, description, first_empty, last_empty, network, vlan_id, vlan_name):
     """Search entry information in NOC."""
     if first_empty or last_empty:
         if not network and not vlan_id and not vlan_name:
@@ -102,6 +103,15 @@ def cli(ctx, ip, mac, contains, task_id, first_empty, last_empty, network, vlan_
                 ctx.logerr('Oops. HTTP API error occured.')
                 sys.exit(1)
 
+        elif description:
+            try:
+                r = requests.get('{}/ip/address/'.format(ctx.url),
+                                 auth=(ctx.username, ctx.password),
+                                 params={'description__contains': description})
+            except:
+                ctx.logerr('Oops. HTTP API error occured.')
+                sys.exit(1)
+
         else:
             ctx.logerr('At least one of the search option must be set.')
             sys.exit(1)
@@ -138,4 +148,8 @@ def cli(ctx, ip, mac, contains, task_id, first_empty, last_empty, network, vlan_
 
                 elif task_id:
                     ctx.log(u'There is no record for ID заявки %s.', task_id)
+                    sys.exit(1)
+
+                elif description:
+                    ctx.log(u'There is no record for description %s.', description)
                     sys.exit(1)
