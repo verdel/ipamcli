@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import click
 import netaddr
-import requests
-import json
 import sys
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import checkMAC, checkIP, get_first_empty, get_network_prefix_by_subnet, get_network_mask_by_subnet
+import ipamcli.libs.phpipam.client as phpipam
+from ipamcli.libs.phpipam import exception
 
 
-@click.command('add', short_help='add new entry to NOC')
+@click.command('add', short_help='add new entry to phpIPAM')
 @click.option('--first-empty', is_flag=True, help='search first empty IP address')
 @click.option('--last-empty', is_flag=True, help='search last empty IP address')
 @click.option('--network', help='network address for first-empty search')
@@ -16,15 +15,15 @@ from ipamcli.commands.tools import checkMAC, checkIP, get_first_empty, get_netwo
 @click.option('--vlan-name', help='vlan name for first-empty search')
 @click.option('--ip', help='ip address for new entry')
 @click.option('--mac', help='mac address for new entry')
-@click.option('--fqdn', default='fqdn.local', show_default=True, help='fqdn for new entry')
+@click.option('--hostname', default='fqdn.local', show_default=True, help='fqdn for new entry')
 @click.option('--description', default="", help='description for new entry')
 @click.option('--task-id', required=True, help='task id for new entry')
 @pass_context
-def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, fqdn, description, task_id):
-    """Add new entry to NOC."""
+def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, hostname, description, task_id):
+    """Add new entry to phpIPAM."""
     if first_empty or last_empty:
         if not network and not vlan_id and not vlan_name:
-            ctx.logerr('At least one of the --network / --vlan-id / --vlan-name option must be set when use --first-empty option.')
+            ctx.logerr('At least one of the --network / --vlan-id / --vlan-name option must be set when use --first-empty / --last-empty option .')
             sys.exit(1)
 
         if vlan_id:
@@ -51,48 +50,62 @@ def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, fqdn
             ctx.logerr('Network address %s is invalid.', network)
             sys.exit(1)
 
+        subnetId = phpipam.get_subnet_id(ctx, network)
+
         if first_empty:
-            reverse = False
+            ip = phpipam.get_first_empty(ctx, network)
         elif last_empty:
-            reverse = True
+            ip = phpipam.get_last_empty(ctx, network)
 
-        ip = get_first_empty(ctx, network, reverse, verbose=False)
-
-        if not ip:
-            ctx.logerr('There is no free IP in network %s.', network)
+        if ip is None:
+            ctx.logerr('No free IP found in subnet.')
             sys.exit(1)
 
     elif ip:
-        if not checkIP(ip):
+        if not phpipam.checkIP(ip):
             ctx.logerr('IP address %s is invalid.', ip)
             sys.exit(1)
+        else:
+            subnet = phpipam.get_subnet_by_ip(ctx, ip)
+            subnetId = subnet['id']
+            network = subnet['subnet']
+            try:
+                network = netaddr.IPNetwork(network)
+
+            except netaddr.core.AddrFormatError:
+                ctx.logerr('Network address %s is invalid.', network)
+                sys.exit(1)
 
     else:
         ctx.logerr('At least one of the add option must be set.')
         sys.exit(1)
 
     if mac:
-        if not checkMAC(mac):
+        if not phpipam.checkMAC(mac):
             ctx.logerr('MAC address %s is invalid.', mac)
-            sys.exit(1)
+            return
+    else:
+        mac = ""
 
-    payload = {'address': str(ip), 'mac': mac, 'fqdn': fqdn, 'description': description, 'tt': task_id}
-
+    payload = {"subnetId": int(subnetId), "ip": str(ip), "mac": mac, "hostname": hostname, "description": description, "custom_NOC_TT": task_id}
     try:
-        r = requests.post('{}/ip/address/'.format(ctx.url),
-                          auth=(ctx.username, ctx.password),
-                          data=json.dumps(payload))
-    except:
+        result = phpipam.add_address(ctx, payload)
+
+    except exception.ipamCLIIPExists:
+        ctx.logerr('Oops. IP address already exists.')
+        sys.exit(1)
+
+    except Exception:
         ctx.logerr('Oops. HTTP API error occured.')
         sys.exit(1)
 
-    if r.status_code == 403:
-        ctx.logerr('Invalid username or password.')
-        sys.exit(1)
+    if result is not None:
+        ctx.log('The entry for ip %s/%s (%s) has been successfully created. The entry ID: %s.',
+                ip,
+                phpipam.get_network_prefix_by_subnet(network),
+                phpipam.get_network_mask_by_subnet(network),
+                result)
 
-    elif r.status_code == 409:
-        ctx.logerr('The entry for ip %s was not created. Duplicated entry.', ip)
+    else:
+        ctx.logerr('Error creating entry.')
         sys.exit(1)
-
-    elif r.status_code == 201:
-        ctx.log('The entry for ip %s/%s (%s) has been successfully created. The entry ID: %s.', ip, get_network_prefix_by_subnet((r.json()['prefix__label']).replace("default(4): ", "")), get_network_mask_by_subnet((r.json()['prefix__label']).replace("default(4): ", "")), r.json()['id'])

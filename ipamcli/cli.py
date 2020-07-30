@@ -4,6 +4,7 @@ import os
 import sys
 import click
 import yaml
+from ipamcli.libs.phpipam.client import get_token
 
 CONTEXT_SETTINGS = dict(auto_envvar_prefix='IPAMCLI')
 
@@ -53,25 +54,31 @@ class ComplexCLI(click.MultiCommand):
 @click.command(cls=ComplexCLI, context_settings=CONTEXT_SETTINGS)
 @click.option('-u', '--username',
               default=lambda: os.environ.get('IPAMCLI_USERNAME'),
-              help='Username for NOC.')
+              help='Username for phpIPAM.')
 @click.option('-p', '--password', hide_input=True,
               default=lambda: os.environ.get('IPAMCLI_PASSWORD'),
-              help='Password for NOC.')
-@click.option('--url', default='http://noc.rk.local',
-              show_default=True, help='NOC url.')
+              help='Password for phpIPAM.')
+@click.option('--url',
+              default=lambda: os.environ.get('IPAMCLI_URL'),
+              help='phpIPAM url.')
 @click.option('--vlan-list-path',
               type=click.Path(exists=True),
               default=lambda: os.environ.get('IPAMCLI_VLAN_LIST'),
               help='Path to vlan list configuration file.')
 @pass_context
 def cli(ctx, username, password, url, vlan_list_path):
-    """Console utility for IPAM management with NOC."""
+    """Console utility for IPAM management with phpIPAM."""
     ctx.username = username
     ctx.password = password
     ctx.url = url
     if(vlan_list_path):
         try:
-            ctx.vlan_list = yaml.load(file(vlan_list_path, 'r'))
-        except:
+            with open(vlan_list_path, 'r') as vlan_list:
+                ctx.vlan_list = yaml.load(vlan_list, Loader=yaml.FullLoader)
+        except Exception:
             ctx.logerr('Oops. VLAN list configuration load exception.')
             sys.exit(1)
+
+    ctx.token = get_token(ctx)
+    if ctx.token is None:
+        sys.exit(1)

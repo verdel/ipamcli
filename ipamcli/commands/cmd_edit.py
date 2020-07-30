@@ -1,112 +1,58 @@
 # -*- coding: utf-8 -*-
 import sys
 import click
-import requests
-import json
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import checkMAC, checkIP
+import ipamcli.libs.phpipam.client as phpipam
 
 
-@click.command('edit', short_help='edit exist entry in NOC')
+@click.command('edit', short_help='edit exist entry in phpIPAM')
 @click.option('--ip', help='ip address of entry to be updated')
-@click.option('--mac', help='mac address of entry to be updated')
-@click.option('--task-id', help='task id of entry to be updated')
-@click.option('--new-ip', help='new ip address for entry')
 @click.option('--new-mac', help='new mac address for entry')
-@click.option('--new-fqdn', help='new fqdn for entry')
+@click.option('--new-hostname', help='new fqdn for entry')
 @click.option('--new-description', help='new description for entry')
 @click.option('--new-task-id', help='new task id for entry')
 @pass_context
-def cli(ctx, ip, mac, task_id, new_ip, new_mac, new_fqdn, new_description, new_task_id):
-    """Edit entry information in NOC."""
+def cli(ctx, ip, new_mac, new_hostname, new_description, new_task_id):
+    """Edit entry information in phpIPAM."""
     if ip:
-        if not checkIP(ip):
+        if not phpipam.checkIP(ip):
             ctx.logerr('IP address %s is invalid.', ip)
             sys.exit(1)
 
         try:
-            r = requests.get('{}/ip/address/'.format(ctx.url),
-                             auth=(ctx.username, ctx.password),
-                             params={'address': ip})
-        except:
+            resp = phpipam.search_by_ip(ctx, ip)
+        except Exception:
             ctx.logerr('Oops. HTTP API error occured.')
             sys.exit(1)
 
-    elif mac:
-        if not checkMAC(mac):
-            ctx.logerr('MAC address %s is invalid.', mac)
-            sys.exit(1)
-
-        else:
-            try:
-                r = requests.get('{}/ip/address/'.format(ctx.url),
-                                 auth=(ctx.username, ctx.password),
-                                 params={'mac': mac})
-            except:
-                ctx.logerr('Oops. HTTP API error occured.')
-                sys.exit(1)
-
-    elif task_id:
-        try:
-            r = requests.get('{}/ip/address/'.format(ctx.url),
-                             auth=(ctx.username, ctx.password),
-                             params={'tt': task_id})
-        except:
-            ctx.logerr('Oops. HTTP API error occured.')
-            sys.exit(1)
-
-    else:
-        ctx.logerr('At least one of the search option must be set.')
-        sys.exit(1)
-
-    if r.status_code == 403:
-        ctx.logerr('Invalid username or password.')
-        sys.exit(1)
-
-    else:
-        resp = r.json()
-        if len(resp) == 0:
-            ctx.logerr('There is no record. For edit operation must be specified at least one entry.')
-            sys.exit(1)
-
-        elif len(resp) == 1:
+        if resp:
             payload = dict()
-            if new_ip:
-                if not checkIP(new_ip):
-                    ctx.logerr('IP adrress %s is invalid.', new_ip)
-                    sys.exit(1)
-                payload.update({'address': new_ip})
-
             if new_mac:
-                if not checkMAC(new_mac):
-                    ctx.logerr('MAC address %s is invalid.', mac)
+                if not phpipam.checkMAC(new_mac):
+                    ctx.logerr('MAC address %s is invalid.', new_mac)
                     sys.exit(1)
                 payload.update({'mac': new_mac})
 
-            if new_fqdn:
-                payload.update({'fqdn': new_fqdn})
+            if new_hostname:
+                payload.update({'hostname': new_hostname})
 
             if new_description:
                 payload.update({'description': new_description})
 
             if new_task_id:
-                payload.update({'tt': new_task_id})
-
+                payload.update({'custom_NOC_TT': new_task_id})
             try:
-                r = requests.put('{}/ip/address/{}/'.format(ctx.url, resp[0]['id']),
-                                 auth=(ctx.username, ctx.password),
-                                 data=json.dumps(payload))
-            except:
+                result = phpipam.edit_address(ctx, resp[0]['id'], payload)
+            except Exception:
                 ctx.logerr('Oops. HTTP API error occured.')
                 sys.exit(1)
 
-            if r.status_code == 200:
-                ctx.log('The entry has been successfully updated.')
-
+            if result is not None:
+                ctx.log('The entry has been successfully edit.')
             else:
-                ctx.logerr('Error updating the entry.')
+                ctx.logerr('Error editing entry.')
                 sys.exit(1)
 
         else:
-            ctx.logerr('There is multiple entries. For edit operation must be specified only one entry.')
+            ctx.logerr('There is no entry with ip %s.', ip)
             sys.exit(1)

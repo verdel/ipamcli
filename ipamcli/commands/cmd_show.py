@@ -3,18 +3,18 @@ import sys
 import click
 import netaddr
 from ipamcli.cli import pass_context
-from ipamcli.commands.tools import show_network_addresses
+import ipamcli.libs.phpipam.client as phpipam
 from tabulate import tabulate
 
 
-@click.command('show', short_help='show entry from sub-network in NOC')
+@click.command('show', short_help='show entry from sub-network in phpIPAM')
 @click.option('--network', help='network address')
 @click.option('--vlan-id', metavar='<int>', help='vlan id')
 @click.option('--vlan-name', help='vlan name')
 @click.option('--free-only', is_flag=True, help='show only free IP address from sub-network')
 @pass_context
 def cli(ctx, network, vlan_id, vlan_name, free_only):
-    """Show entry information from NOC."""
+    """Show entry information from phpIPAM."""
     if not network and not vlan_id and not vlan_name:
         ctx.logerr('At least one of the --network / --vlan-id / --vlan-name option must be set.')
         sys.exit(1)
@@ -43,7 +43,7 @@ def cli(ctx, network, vlan_id, vlan_name, free_only):
         ctx.logerr('Network address %s is invalid.', network)
         sys.exit(1)
 
-    resp = show_network_addresses(ctx, network, free_only, verbose=True)
+    resp = phpipam.show_network_addresses(ctx, network, free_only, verbose=True)
 
     if resp:
         resp = sorted(resp, key=lambda k: netaddr.IPAddress(k['Address']))

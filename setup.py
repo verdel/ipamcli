@@ -16,11 +16,8 @@ with open('ipamcli/__init__.py') as f:
             version = version.strip("'")
             continue
 
-with open(path.join(here, 'README.rst'), encoding='utf-8') as readme_file:
+with open(path.join(here, 'README.md'), encoding='utf-8') as readme_file:
     readme = readme_file.read()
-
-with open(path.join(here, 'HISTORY.rst'), encoding='utf-8') as history_file:
-    history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
     'requests>=2.0',
@@ -33,8 +30,8 @@ requirements = [
 setup(
     name='ipamcli',
     version=version,
-    description='Command line interface to NOC IPAM module.',
-    long_description=readme + '\n\n' + history,
+    description='Command line interface to phpIPAM module.',
+    long_description=readme,
     author='Vadim Aleksandrov',
     author_email='valeksandrov@me.com',
     url='https://github.com/verdel/ipamcli',
