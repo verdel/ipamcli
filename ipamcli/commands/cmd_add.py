@@ -17,9 +17,8 @@ from ipamcli.libs.phpipam import exception
 @click.option('--mac', help='mac address for new entry')
 @click.option('--hostname', default='fqdn.local', show_default=True, help='fqdn for new entry')
 @click.option('--description', default="", help='description for new entry')
-@click.option('--task-id', required=True, help='task id for new entry')
 @pass_context
-def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, hostname, description, task_id):
+def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, hostname, description):
     """Add new entry to phpIPAM."""
     if first_empty or last_empty:
         if not network and not vlan_id and not vlan_name:
@@ -87,7 +86,7 @@ def cli(ctx, first_empty, last_empty, network, vlan_id, vlan_name, ip, mac, host
     else:
         mac = ""
 
-    payload = {"subnetId": int(subnetId), "ip": str(ip), "mac": mac, "hostname": hostname, "description": description, "custom_NOC_TT": task_id}
+    payload = {"subnetId": int(subnetId), "ip": str(ip), "mac": mac, "hostname": hostname, "description": description}
     try:
         result = phpipam.add_address(ctx, payload)
 

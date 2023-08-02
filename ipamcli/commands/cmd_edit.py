@@ -10,9 +10,8 @@ import ipamcli.libs.phpipam.client as phpipam
 @click.option('--new-mac', help='new mac address for entry')
 @click.option('--new-hostname', help='new fqdn for entry')
 @click.option('--new-description', help='new description for entry')
-@click.option('--new-task-id', help='new task id for entry')
 @pass_context
-def cli(ctx, ip, new_mac, new_hostname, new_description, new_task_id):
+def cli(ctx, ip, new_mac, new_hostname, new_description):
     """Edit entry information in phpIPAM."""
     if ip:
         if not phpipam.checkIP(ip):
@@ -39,8 +38,6 @@ def cli(ctx, ip, new_mac, new_hostname, new_description, new_task_id):
             if new_description:
                 payload.update({'description': new_description})
 
-            if new_task_id:
-                payload.update({'custom_NOC_TT': new_task_id})
             try:
                 result = phpipam.edit_address(ctx, resp[0]['id'], payload)
             except Exception:

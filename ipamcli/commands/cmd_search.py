@@ -84,7 +84,7 @@ def cli(ctx, ip, hostname, first_empty, last_empty, network, vlan_id, vlan_name)
             resp = sorted(resp, key=lambda k: netaddr.IPAddress(k['ip']))
             for item in resp:
                 subnet = phpipam.get_subnet_by_id(ctx, item['subnetId'])
-                ctx.log(u'ID: %s\nSubnet prefix: %s\nSubnet netmask: %s\nSubnet description: %s\nIP: %s\nMAC: %s\nFQDN: %s\nDescription: %s\nID заявки: %s\n',
+                ctx.log(u'ID: %s\nSubnet prefix: %s\nSubnet netmask: %s\nSubnet description: %s\nIP: %s\nMAC: %s\nFQDN: %s\nDescription: %s\n',
                         item['id'],
                         '{}/{}'.format(subnet['subnet'], subnet['mask']),
                         phpipam.get_network_mask_by_subnet('{}/{}'.format(subnet['subnet'], subnet['mask'])),
@@ -92,8 +92,7 @@ def cli(ctx, ip, hostname, first_empty, last_empty, network, vlan_id, vlan_name)
                         item['ip'],
                         item['mac'],
                         item['hostname'],
-                        item['description'],
-                        item['custom_NOC_TT'])
+                        item['description'])
 
         else:
             if ip:
